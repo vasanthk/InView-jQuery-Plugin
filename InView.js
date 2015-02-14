@@ -2,7 +2,8 @@
  * InView jQuery Plugin
  *
  * Watch elements and fire an event when it is first viewed.
- *
+ * 
+ * TODO: Bower the crap out of this!
  * @author: Vasanth Krishnamoorthy
  */
 
