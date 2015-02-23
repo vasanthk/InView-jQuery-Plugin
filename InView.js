@@ -1,47 +1,51 @@
 /**
  * InView jQuery Plugin
  *
- * Watch elements and fire an event when it is first viewed.
- * 
- * TODO: Bower the crap out of this!
+ * Watch elements on the page (#id elements) and fire a callback function when it is viewed.
+ *
  * @author: Vasanth Krishnamoorthy
  */
 
 (function ($, window) {
-	var cache = [],
-		inview_items = 0,
-		$w = $(window);
+    var cache = [],
+        inviewItems = 0,
+        $w = $(window);
 
-	$.fn.trackInView = function (section_name) {
-		var $element = $(this),
-			startTime = _.now();
+    $.fn.inView = function (callback) {
+        if (typeof callback !== 'function') {
+            return;
+        }
+        var $element = $(this),
+            selectorName = $element.selector; // Used to refer elements are being watched on the page.
 
-		inview_items++;
+        inviewItems++;
 
-		function trackSectionViews($element, section_name, scroll_depth, timing) {
-			var current_caption;
-			if ($.inArray(section_name, cache) === -1 && $element.length) {
-				if (scroll_depth >= $element.offset().top) {
-					current_caption = section_name || 'Unknown';
-					_gaq.push(["_trackEvent", current_caption, scroll_depth, timing, true]);
-					cache.push(current_caption);
-				}
-			}
-		}
+        $w.on('scroll.inView', throttle(function () {
+            var win_height = window.innerHeight || $w.height(),	// < IE9 doesn't use window property
+                scroll_depth = $w.scrollTop() + win_height;
 
-		$w.on('scroll.trackInView', _.throttle(function () {
-			var win_height = window.innerHeight || $w.height(),	// < IE9 doesn't use window property
-				scroll_depth = $w.scrollTop() + win_height,
-				timing = (_.now() - startTime) / 1000; // In seconds
+            if (cache.length >= inviewItems) { // Unbind scroll after element has been viewed
+                $w.off('scroll.inView');
+                return;
+            }
 
-			if (cache.length >= inview_items) { // Unbind scroll once done
-				$w.off('scroll.trackInView');
-				return;
-			}
+            if ($element.length && $.inArray(selectorName, cache) === -1 && scroll_depth >= $element.offset().top) {
+                callback.call(this);
+                cache.push(selectorName);
+            }
+        }));
 
-			if ($element) {
-				trackSectionViews($element, section_name, scroll_depth, timing);
-			}
-		}, 500));
-	};
+        function throttle(fn) { //  rate limits the execution of scroll event.
+            var wait = false;
+            return function () {
+                if (!wait) {
+                    fn.call();
+                    wait = true;
+                    setTimeout(function () {
+                        wait = false;
+                    }, 500);
+                }
+            };
+        }
+    };
 })(jQuery, window);

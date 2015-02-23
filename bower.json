@@ -1,0 +1,11 @@
+{
+  "name": "inView jQuery Plugin",
+  "version": "1.0",
+  "main": ["./inView.js"],
+  "ignore": [
+    "README.md"
+  ],
+  "dependencies": {
+    "jquery": "latest"
+  }
+}
