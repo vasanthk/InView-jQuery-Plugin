@@ -3,7 +3,7 @@
 Watch elements on the page and fire a callback function when it is viewed.
 Note: jQuery selector should match only one element on the page.
 
-Installation:
+**Installation**
 ```
 bower install inview-jquery-plugin
 ```
