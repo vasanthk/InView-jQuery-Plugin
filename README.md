@@ -3,4 +3,8 @@
 Watch elements on the page and fire a callback function when it is viewed.
 Note: jQuery selector should match only one element on the page.
 
-License: Do What The F*ck You Want To Public License (WTFPL)
+Installation:
+```
+bower install inview-jquery-plugin
+```
+
