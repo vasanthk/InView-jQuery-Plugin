@@ -4,6 +4,7 @@
  * Watch elements on the page (#id elements) and fire a callback function when it is viewed.
  *
  * @author: Vasanth Krishnamoorthy
+ * Do What The F*ck You Want To Public License (WTFPL)
  */
 
 (function ($, window) {
