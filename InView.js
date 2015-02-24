@@ -1,15 +1,17 @@
 /**
+ *
  * InView jQuery Plugin
  *
  * Watch elements on the page (#id elements) and fire a callback function when it is viewed.
- *
  * @author: Vasanth Krishnamoorthy
+ *
  * Do What The F*ck You Want To Public License (WTFPL)
+ *
  */
 
 (function ($, window) {
     var cache = [],
-        inviewItems = 0,
+        inViewItems = 0,
         $w = $(window);
 
     $.fn.inView = function (callback) {
@@ -17,26 +19,31 @@
             return;
         }
         var $element = $(this),
-            selectorName = $element.selector; // Used to refer elements are being watched on the page.
+        // Used to refer elements being watched on the page.
+            selectorName = $element.selector;
 
-        inviewItems++;
+        inViewItems++;
 
+        // Custom event handler
         $w.on('scroll.inView', throttle(function () {
-            var win_height = window.innerHeight || $w.height(),	// < IE9 doesn't use window property
-                scroll_depth = $w.scrollTop() + win_height;
+            var winHeight = window.innerHeight || $w.height(),	// < IE9 doesn't use window property
+                scrollDepth = $w.scrollTop() + winHeight;
 
-            if (cache.length >= inviewItems) { // Unbind scroll after element has been viewed
+            // Unbind scroll after all elements to be watched have been viewed
+            if (cache.length >= inViewItems) {
                 $w.off('scroll.inView');
                 return;
             }
 
-            if ($element.length && $.inArray(selectorName, cache) === -1 && scroll_depth >= $element.offset().top) {
+            // Fire callback function
+            if ($element.length && $.inArray(selectorName, cache) === -1 && scrollDepth >= $element.offset().top) {
                 callback.call(this);
                 cache.push(selectorName);
             }
         }));
 
-        function throttle(fn) { //  rate limits the execution of scroll event.
+        //  Rate limit scroll event to fire only once in 500ms
+        function throttle(fn) {
             var wait = false;
             return function () {
                 if (!wait) {
